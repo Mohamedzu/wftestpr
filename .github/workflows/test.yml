@@ -1,0 +1,30 @@
+name: CI
+
+on: pull_request_target
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: view the github context
+        run: echo "$GITHUB_CONTEXT"
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+
+      - name: view refs
+        run: |
+          echo "====================================== pr ref ======================================"
+          echo "github.ref = ${{ github.ref }}"
+          echo "github.sha = ${{ github.sha }}"
+          echo "GITHUB_SHA = $GITHUB_SHA"
+          echo "===================================== base ref ====================================="
+          echo "github.event.pull_request_target.base.ref = ${{ github.event.pull_request_target.base.ref }}"
+          echo "github.event.pull_request_target.base.sha = ${{ github.event.pull_request_target.base.sha }}"
+          echo "===================================== head ref ====================================="
+          echo "github.event.pull_request_target.head.ref = ${{ github.event.pull_request_target.head.ref }}"
+          echo "github.event.pull_request_target.head.sha = ${{ github.event.pull_request_target.head.sha }}"
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.sha }}
